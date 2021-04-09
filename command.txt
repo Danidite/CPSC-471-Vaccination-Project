@@ -1,0 +1,1 @@
+mysql --host=us-cdbr-east.cleardb.com --user=b00a92ce4db345 --password=b6ee72ae --reconnect heroku_efc788d1dc18da4 < TableCreation.sql

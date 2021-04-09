@@ -1,6 +1,6 @@
-create Database if not exists storedatabase;
+create Database if not exists heroku_efc788d1dc18da4;
 
-create table if not exists storedatabase.USER(
+create table if not exists heroku_efc788d1dc18da4.USER(
 ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Email varchar(255),
 Password varchar(255) NOT NULL,
@@ -8,13 +8,13 @@ FName varchar(255),
 MName varchar(255),
 LName varchar(255));
 
-create table if not exists storedatabase.ADMIN (
+create table if not exists heroku_efc788d1dc18da4.ADMIN (
 ID int NOT NULL PRIMARY KEY,
 FOREIGN KEY (ID) REFERENCES USER(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.PATIENT (
+create table if not exists heroku_efc788d1dc18da4.PATIENT (
 ID int NOT NULL PRIMARY KEY,
 Age int,
 PhoneNumber varchar(255),
@@ -27,14 +27,14 @@ FOREIGN KEY (ID) REFERENCES USER(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.HEALTH_PROFILE (
+create table if not exists heroku_efc788d1dc18da4.HEALTH_PROFILE (
 ID int NOT NULL,
 HealthNumber int NOT NULL PRIMARY KEY,
 FOREIGN KEY (ID) REFERENCES USER(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.VACCINE (
+create table if not exists heroku_efc788d1dc18da4.VACCINE (
 ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Name varchar(255),
 Advisery varchar(255),
@@ -45,7 +45,7 @@ FOREIGN KEY (CreaterID) REFERENCES ADMIN(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.CLINIC (
+create table if not exists heroku_efc788d1dc18da4.CLINIC (
 ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Name varchar(255),
 Address varchar(255),
@@ -59,14 +59,14 @@ FOREIGN KEY (CreaterID) REFERENCES ADMIN(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.CLINIC_PHONE_NUMBER (
+create table if not exists heroku_efc788d1dc18da4.CLINIC_PHONE_NUMBER (
 CID int NOT NULL,
 PhoneNumber varchar(255) NOT NULL PRIMARY KEY,
 FOREIGN KEY (CID) REFERENCES CLINIC(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.VACCINE_SUPPORT (
+create table if not exists heroku_efc788d1dc18da4.VACCINE_SUPPORT (
 CID int NOT NULL,
 VID int NOT NULL,
 FOREIGN KEY (CID) REFERENCES CLINIC(ID)
@@ -76,7 +76,7 @@ FOREIGN KEY (VID) REFERENCES VACCINE(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.REQUEST_APPOINTMENT (
+create table if not exists heroku_efc788d1dc18da4.REQUEST_APPOINTMENT (
 ID int NOT NULL PRIMARY KEY,
 Date varchar(255),
 PID int,
@@ -88,7 +88,7 @@ FOREIGN KEY (VID) REFERENCES VACCINE(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
 
-create table if not exists storedatabase.APPOINTMENT (
+create table if not exists heroku_efc788d1dc18da4.APPOINTMENT (
 RID int NOT NULL,
 Date varchar(255) PRIMARY KEY,
 Status varchar(255),
