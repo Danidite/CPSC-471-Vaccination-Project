@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Vaccine Registration System - Signup</title>
+   <!-- <link rel="icon" href="./images/Icon.png"> -->
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+   <script src="https://kit.fontawesome.com/61968f357f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+   <!-- Navigation Bar -->
+   <nav id="menu" class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="/">
+         <!-- <img src="/images/Icon.png" class="d-inline-block align-top nav-img" alt="Vaccine Registration System"> -->
+         Vaccine Vacinaton System
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         <ul class="navbar-nav ml-auto">
+            <%  if(!currentUser) { %>
+               <li class="nav-item">
+                  <a class="nav-link" href="/login">Login</a>
+               </li>
+               <li class="nav-item ml-2">
+                  <a class="nav-link btn btn-outline-secondary my-2 my-sm-0"  href="/register">Sign Up</a>
+               </li>
+           <%  } else { %>
+               <li class="nav-item">
+                 <a class="nav-link" href="">Signed In as "<%= currentUser.Email%>"</a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link btn btn-outline-secondary my-2 my-sm-0" href="/logout">Logout</a>
+               </li>
+           <%  } %>
+         </ul>
+      </div>
+   </nav>
+
+   <br class="mb-5"><br class="mb-5"><br class="mb-5">
+   <div class="container">
+   <% if(error && error.length > 0) { %>
+   <div class="alert alert-danger" role="alert">
+     <%=error%>
+   </div>
+     <% } else if (success && success.length > 0) { %>
+   <div class="alert alert-success" role="alert">
+     <%=success%>
+   </div>
+      <% } %>
+   </div>
+
+   <section id="form">
+      <div class="container">
+         <div class="row">
+             <div class="col-md-4 mb-4">
+                 <p class="lead">Vacine Vacination System</p>
+                 <ul class="list-group">
+                     <li class="list-group-item active text-center">Clinics</li>
+                     <li class="list-group-item text-center">Information and more!</li>
+                     <li class="list-group-item text-center"><a class="btn btn-dark" href="/clinics" role="button">Go Back</a></li>
+                   </ul>
+             </div>
+             <div class="col mb-4">
+                 <div class="card mb-4">
+                     <div class="embed-responsive embed-responsive-16by9">
+                         <img class="card-img-top embed-responsive-item" src="<%= clinic.URL%>" alt="No image found">
+                      </div>
+                     <div class="card-body">
+                       <h4 class="card-title"><a href=""><%= clinic.Name%></a></h5>
+                       <h6 class="card-subtitle mb-2 text-muted"><%= clinic.Address%>, <%= clinic.PostalCode%>, <%= clinic.City%>, <%= clinic.Province%>, <%= clinic.Country%></h6>
+                       <p class="card-text">Phone Numbers: </p>
+                     </div>
+                     <div class="card-footer text-muted">
+                        <div>Created By a admin with ID of: <%= clinic.CreaterID%></div>
+
+                        <div class="btn-group">
+                           <%  if(currentUser) { %>
+                              <%  if(currentUser.Admin === true) { %>
+                                 <!-- <a href="/clinics/<%= clinic.ID%>/edit" class="btn btn-warning my-2 mr-2">Edit</a> -->
+                                 <!-- <a href="/clinics/<%= clinic._id%>/phone" class="btn btn-warning my-2 mr-2">Add Phone Number</a> -->
+                                 <form action="/clinics/<%= clinic.ID%>/?_method=DELETE" method="POST" class="form-inline ml-auto">
+                                    <button class="btn btn-danger">Delete</button>
+                                 </form>
+                              <%  } %>
+                           <%  } %>
+                        </div>
+                     </div>
+                   </div>
+             </div>
+         </div>
+     </div>
+   </section>
+
+</body>
+
+</html>
