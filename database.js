@@ -46,7 +46,7 @@ const connection = mysql.createConnection({
 // Random Query to keep connection alive
 setInterval(function () {
     connection.query('SELECT 1');
-}, 60000);
+}, 30000);
 
 // const connection = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
 

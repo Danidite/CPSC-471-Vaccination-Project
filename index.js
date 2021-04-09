@@ -24,21 +24,19 @@ app.use(express.static(`${__dirname}/public`));
 app.use(methodOverride("_method"));
 app.use(flash());
 
-
 app.set('trust proxy', 1);
 
 app.use(session({
     secret:'LMAO Secret xddd',
-    saveUninitialized: true,
-    resave: false
+	keys: ['Rifatism','Noluna','JensusIsLife','LmaoKeyxd']
 }));
 
-app.use(function(req,res,next){
-    if(!req.session){
-        return next(new Error('Oh no')) //handle error
-    }
-    next() //otherwise continue
- });
+// Update a value in the cookie so that the set-cookie will be sent.
+// Only changes every minute so that it's not sent with every request.
+app.use(function (req, res, next) {
+  req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
+  next()
+})
 
 app.use((req, res , next) => {
     res.locals.currentUser = req.session.user;
