@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Vaccine Registration System - User scores Page</title>
+   <!-- <link rel="icon" href="./images/Icon.png"> -->
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+   <script src="https://kit.fontawesome.com/61968f357f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+   <!-- Navigation Bar -->
+   <nav id="menu" class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="/">
+         <!-- <img src="/images/Icon.png" class="d-inline-block align-top nav-img" alt="Vaccine Registration System"> -->
+         Vaccine Vacinaton System
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         <ul class="navbar-nav ml-auto">
+            <li class="nav-item ml-2">
+               <a class="nav-link btn btn-outline-secondary my-2 my-sm-0"  href="#signup">Logout</a>
+            </li>
+         </ul>
+      </div>
+   </nav>
+
+   <br class="mb-5"><br class="mb-5"><br class="mb-5">
+   <div class="container">
+   <% if(error && error.length > 0) { %>
+   <div class="alert alert-danger" role="alert">
+     <%=error%>
+   </div>
+     <% } else if (success && success.length > 0) { %>
+   <div class="alert alert-success" role="alert">
+     <%=success%>
+   </div>
+      <% } %>
+   </div>
+
+   <div class="jumbotron">
+      <div class="container">
+          <h1 class="display-5">Welcome to User Score Lists</h1>
+          <p class="lead">All the scores of users rated by system, 1 = Highest Priority for Vaccination</p>
+      </div>
+  </div>
+
+  <section id="score-list">
+   <div class="row">
+      <% for(const user of users) { %>
+         <div class="container col-md-6 col-lg-5 col-xl-4 p-1">
+            <div class="card p-0 text-center">
+                <div class="card-body">
+                     <h5 class="card-title text-center"><%= user.FName %> <%= user.MName %> <%= user.LName %></h5>
+                </div>
+                <div class="card-footer text-muted">
+                    <div><%= (user.Age * user.HealthNumber) %></div>
+                </div>
+            </div>
+        </div>
+      <% } %>
+  </div>
+</section>
+
+</body>
+
+</html>
