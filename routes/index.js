@@ -85,7 +85,7 @@ router.post('/login', (req, res) => {
                                 } else {
                                     let healthInfo = results[0];
                                     req.session.user.HealthNumber = healthInfo.HealthNumber;
-                                    console.log(req.session.user);
+                                    // console.log(req.session.user);
                                     req.flash("success", "Welcome patient user!");
                                     res.redirect("/");
                                 }   

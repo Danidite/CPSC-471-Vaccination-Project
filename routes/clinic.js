@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
             req.flash("error", error.message);            
             return res.redirect('/');
         }
-        console.log(result);
+        // console.log(result);
         res.render("clinic/index", {clinics: result});
     });
 });

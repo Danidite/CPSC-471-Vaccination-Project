@@ -1,13 +1,11 @@
 require('dotenv').config();
 const   Joi             = require('joi'),
         express         = require('express'),
-        session         = require('express-session'),
+        session         = require('cookie-session'),
         app             = express(),
         bodyParser      = require("body-parser"),
         methodOverride  = require("method-override"),
-        flash           = require("connect-flash"),
-        mysql           = require('mysql'),
-        middleware      = require("./middleware");
+        flash           = require("connect-flash");
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,11 +24,21 @@ app.use(express.static(`${__dirname}/public`));
 app.use(methodOverride("_method"));
 app.use(flash());
 
+
+app.set('trust proxy', 1);
+
 app.use(session({
     secret:'LMAO Secret xddd',
-    saveUninitialized: false,
+    saveUninitialized: true,
     resave: false
 }));
+
+app.use(function(req,res,next){
+    if(!req.session){
+        return next(new Error('Oh no')) //handle error
+    }
+    next() //otherwise continue
+ });
 
 app.use((req, res , next) => {
     res.locals.currentUser = req.session.user;
