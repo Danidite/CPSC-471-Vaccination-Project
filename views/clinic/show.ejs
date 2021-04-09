@@ -87,6 +87,7 @@
                               <%  if(currentUser.Admin === true) { %>
                                  <!-- <a href="/clinics/<%= clinic.ID%>/edit" class="btn btn-warning my-2 mr-2">Edit</a> -->
                                  <!-- <a href="/clinics/<%= clinic._id%>/phone" class="btn btn-warning my-2 mr-2">Add Phone Number</a> -->
+                                 <a href="/clinics/<%= clinic.ID%>/vaccines" class="btn btn-warning my-2 mr-2">Manage Offered Vaccines</a>
                                  <form action="/clinics/<%= clinic.ID%>/?_method=DELETE" method="POST" class="form-inline ml-auto">
                                     <button class="btn btn-danger">Delete</button>
                                  </form>

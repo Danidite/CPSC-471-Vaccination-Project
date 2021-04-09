@@ -46,6 +46,8 @@ router.post("/", middleware.isAdmin, (req, res) => {
     });
 });
 
+
+
 // SHOW ROUTE
 router.get("/:id", (req, res) => {
     connection.query('SELECT * FROM `CLINIC` WHERE `ID` = ?', [req.params.id], function (error, results, fields) {
@@ -81,6 +83,34 @@ router.delete("/:id", middleware.isAdmin, async(req, res) => {
             res.redirect("/clinics");
         }
     });
+});
+
+// SHOW vaccines of clinics
+router.get("/:id/vaccines", middleware.isAdmin, (req, res) => {
+    connection.query('SELECT v.ID, v.Name FROM VACCINE v', function (error, results, fields) {
+        if (error) {
+            console.log("Get not assigned Vaccines: " + error.message);
+            req.flash("error", error.message);            
+            return res.redirect('/clinics');
+        }
+        let vacines = results;
+
+        connection.query('SELECT v.ID, v.Name FROM VACCINE v JOIN VACCINE_SUPPORT s ON v.ID = s.VID WHERE s.CID = ?', [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log("Get assigned Vaccines: " + error.message);
+                req.flash("error", error.message);            
+                return res.redirect('/clinics');
+            }
+
+            // let vaccinesNotAssigned = vacines.filter(n => !results.includes(n));
+            // // console.log(vacines.filter(n => !results.includes(n)));
+
+            res.render("clinic/vaccine", {clinicID: req.params.id, vaccines: results, noVaccines: vacines.filter(n => !results.includes(n))});
+            // return res.redirect("back");
+        });
+    });
+
+    // /clinics/<%= clinic._id%>/vaccine
 });
 
 module.exports = router;
