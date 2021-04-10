@@ -104,13 +104,50 @@ router.get("/:id/vaccines", middleware.isAdmin, (req, res) => {
 
             // let vaccinesNotAssigned = vacines.filter(n => !results.includes(n));
             // // console.log(vacines.filter(n => !results.includes(n)));
-
-            res.render("clinic/vaccine", {clinicID: req.params.id, vaccines: results, noVaccines: vacines.filter(n => !results.includes(n))});
+            // console.log("All supported vaccines: ");
+            // for(const vaccine of results) {
+            //     console.log(vaccine);
+            // }
+            // console.log("All UN-supported vaccines: ");
+            // let unsupported = vacines.filter(a => !results.map(b=>b.ID).includes(a.ID));
+            // for(const vaccine of unsupported) {
+            //     console.log(vaccine);
+            // }
+            res.render("clinic/vaccine", {clinicID: req.params.id, vaccines: results, noVaccines: vacines.filter(a => !results.map(b=>b.ID).includes(a.ID))});
             // return res.redirect("back");
         });
     });
 
     // /clinics/<%= clinic._id%>/vaccine
 });
+
+// ENROLL ROUTE
+router.post("/:c_id/vaccines/:v_id/enroll", middleware.isAdmin, async(req, res) => {
+    connection.query('INSERT INTO VACCINE_SUPPORT SET ?', {CID: req.params.c_id, VID: req.params.v_id}, function (error, results, fields) {
+        if (error) {
+            console.log("Inserted supported vaccine to clinic: " + error.message);
+            req.flash("error", error.message);            
+            return res.redirect('/clinics');
+        }
+        req.flash("success", "Vaccine for clinic has been assigned");
+        res.redirect("/clinics");
+    });
+});
+
+// REMOVE ROUTE
+router.post("/:c_id/vaccines/:v_id/remove", middleware.isAdmin, async(req, res) => {
+    connection.query('DELETE FROM VACCINE_SUPPORT WHERE (CID = ?) AND (VID = ?)', [req.params.c_id, req.params.v_id], function (error, result, fields) {
+        if (error) {
+            console.log("DELETE vaccine support: " + error.message);
+            req.flash("error", error.message);            
+            return res.redirect('/clinics');
+        }
+        req.flash("success", "Vaccine for clinic has been un assigned");
+        res.redirect("/clinics");
+    });
+});
+
+
+
 
 module.exports = router;
