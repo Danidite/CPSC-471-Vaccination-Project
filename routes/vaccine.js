@@ -83,4 +83,80 @@ router.delete("/:id", middleware.isAdmin, async(req, res) => {
     });
 });
 
+
+// Request appointment 
+router.post("/:v_id/request", middleware.isLoggedIn, middleware.isUser, (req, res) => {
+    // Get the clinic ID of clinics that offer the vacine and are on the same city as user
+    connection.query('SELECT c.ID FROM VACCINE v JOIN VACCINE_SUPPORT s ON v.ID = s.VID JOIN CLINIC c ON c.ID = s.CID WHERE v.ID = ? AND c.City = ?', [req.params.v_id, req.session.user.City], function (error, results, fields) {
+        if (error) {
+            console.log("Select vaccine ID of all conditions: " + error.message);
+            req.flash("error", error.message);            
+            return res.redirect("back");
+        }
+
+        // If no clinic serve this
+        if (results.length == 0) {
+            req.flash("error", "There are no clinic that serve this vaccine in the city you are located in!");            
+            return res.redirect("back");
+        }
+
+        let selectClinicIndex = Math.floor((Math.random() * (results.length)) + 0);
+
+        let c_id = results[selectClinicIndex].ID;
+
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+
+        today = mm + '/' + dd + '/' + yyyy;
+        
+        connection.query('INSERT INTO REQUEST_APPOINTMENT SET ?', {Date: today, PID: req.session.user.ID, VID: req.params.v_id}, function (error, results, fields) {
+            if (error) {
+                console.log("Request appointment creation: " + error.message);
+                req.flash("error", error.message);            
+                return res.redirect("back");
+            }
+
+            let requestID = results.insertId;
+            
+            // 5 days in future
+            let appointment_date = new Date();
+            appointment_date.setDate(appointment_date.getDate() + 5);
+            
+            let d = String(appointment_date.getDate()).padStart(2, '0');
+            let y = appointment_date.getFullYear();
+            
+            let month = new Array();
+            month[0] = "January";
+            month[1] = "February";
+            month[2] = "March";
+            month[3] = "April";
+            month[4] = "May";
+            month[5] = "June";
+            month[6] = "July";
+            month[7] = "August";
+            month[8] = "September";
+            month[9] = "October";
+            month[10] = "November";
+            month[11] = "December";
+            var m = month[appointment_date.getMonth()];
+
+            let newDate = m + " " + d + ", " + y;
+
+            // console.log(newDate);
+
+            connection.query('INSERT INTO APPOINTMENT SET ?', {RID: requestID, Date: newDate, Status: "waiting", CID: c_id}, function (error, results, fields) {
+                if (error) {
+                    console.log("Appointment creation: " + error.message);
+                    req.flash("error", error.message);            
+                    return res.redirect("back");
+                }
+                req.flash("success", "Appointment created");            
+                return res.redirect("/user");
+            });
+        });
+    });
+});
+
 module.exports = router;

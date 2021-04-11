@@ -77,7 +77,13 @@
                      <div class="card-body">
                        <h4 class="card-title"><a href=""><%= clinic.Name%></a></h5>
                        <h6 class="card-subtitle mb-2 text-muted"><%= clinic.Address%>, <%= clinic.PostalCode%>, <%= clinic.City%>, <%= clinic.Province%>, <%= clinic.Country%></h6>
-                       <p class="card-text">Phone Numbers: </p>
+                       <p class="card-text">Phone Numbers: 
+                        <% for(const phone of phones) { %>
+                           <%= phone.PhoneNumber%>, 
+                        <% } %>
+
+
+                       </p>
                      </div>
                      <div class="card-footer text-muted">
                         <div>Created By a admin with ID of: <%= clinic.CreaterID%></div>
@@ -86,8 +92,8 @@
                            <%  if(currentUser) { %>
                               <%  if(currentUser.Admin === true) { %>
                                  <!-- <a href="/clinics/<%= clinic.ID%>/edit" class="btn btn-warning my-2 mr-2">Edit</a> -->
-                                 <!-- <a href="/clinics/<%= clinic._id%>/phone" class="btn btn-warning my-2 mr-2">Add Phone Number</a> -->
-                                 <a href="/clinics/<%= clinic.ID%>/vaccines" class="btn btn-warning my-2 mr-2">Manage Offered Vaccines</a>
+                                 <a href="/clinics/<%= clinic.ID%>/vaccines" class="btn btn-warning my-2 mr-2">Manage Vaccines</a>
+                                 <a href="/clinics/<%= clinic.ID%>/phone" class="btn btn-success my-2 mr-2">Add Phone</a>
                                  <form action="/clinics/<%= clinic.ID%>/?_method=DELETE" method="POST" class="form-inline ml-auto">
                                     <button class="btn btn-danger">Delete</button>
                                  </form>

@@ -95,7 +95,7 @@
                                  </form>
                               <%  } %>
                            <%  } else { %>
-                              <form action="/vaccines/<%= vaccine.ID%>/request" method="POST" class="form-inline ml-auto">
+                              <form action="/vaccines/<%=vaccine.ID%>/request" method="POST" class="form-inline ml-auto">
                                  <button class="btn btn-success">Request Appointment</button>
                               </form>
                            <%  } %>

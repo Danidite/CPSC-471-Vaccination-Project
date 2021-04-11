@@ -51,7 +51,10 @@ app.use("/admin", adminRoutes);
 app.use("/vaccines", vaccineRoutes);
 app.use("/clinics", clinicRoutes);
 
-
+app.get('*', (req, res) => {
+    req.flash("error", "Page not found");   
+    res.redirect("/");
+});
 
 const vaccines = [
     {

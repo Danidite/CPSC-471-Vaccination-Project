@@ -87,6 +87,7 @@ router.post('/login', (req, res) => {
                                     req.session.user.HealthNumber = healthInfo.HealthNumber;
                                     // console.log(req.session.user);
                                     req.flash("success", "Welcome patient user!");
+                                    // return res.redirect("back");
                                     res.redirect("/");
                                 }   
                             });
@@ -99,6 +100,7 @@ router.post('/login', (req, res) => {
 
                     req.flash("success", "Welcome admin user!");
                     // console.log(req.session.user);
+                    // return res.redirect("back");
                     res.redirect("/");
                 }
             });
@@ -129,7 +131,7 @@ router.post("/register", async (req, res) => {
         
                 let UserID = results.insertId;
         
-                connection.query('INSERT INTO PATIENT SET ?', {ID: UserID, Age: req.body.age, PhoneNumber: req.body.phone, Address: req.body.address, PostalCode: req.body.postal, Country: req.body.country, Province: req.body.province, City: req.body.city}, function (error, results, fields) {
+                connection.query('INSERT INTO PATIENT SET ?', {ID: UserID, Age: req.body.age, PhoneNumber: req.body.phone, Address: req.body.address, PostalCode: req.body.postal, Country: req.body.country, Province: req.body.province, City: req.body.city.toUpperCase()}, function (error, results, fields) {
                     if (error) {
                         console.log("Patient creation: " + error.message);
                         req.flash("error", error.message);            

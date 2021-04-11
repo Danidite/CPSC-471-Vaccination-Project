@@ -61,7 +61,8 @@ ON UPDATE CASCADE);
 
 create table if not exists heroku_efc788d1dc18da4.CLINIC_PHONE_NUMBER (
 CID int NOT NULL,
-PhoneNumber varchar(255) NOT NULL PRIMARY KEY,
+PhoneNumber varchar(255) NOT NULL,
+CONSTRAINT PK_PN PRIMARY KEY (CID,PhoneNumber),
 FOREIGN KEY (CID) REFERENCES CLINIC(ID)
 ON DELETE CASCADE
 ON UPDATE CASCADE);
@@ -79,7 +80,7 @@ ON UPDATE CASCADE
 );
 
 create table if not exists heroku_efc788d1dc18da4.REQUEST_APPOINTMENT (
-ID int NOT NULL PRIMARY KEY,
+ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 Date varchar(255),
 PID int,
 VID int,
@@ -91,8 +92,8 @@ ON DELETE CASCADE
 ON UPDATE CASCADE);
 
 create table if not exists heroku_efc788d1dc18da4.APPOINTMENT (
-RID int NOT NULL,
-Date varchar(255) PRIMARY KEY,
+RID int NOT NULL PRIMARY KEY,
+Date varchar(255) NOT NULL,
 Status varchar(255),
 CID int,
 FOREIGN KEY (RID) REFERENCES REQUEST_APPOINTMENT(ID)
