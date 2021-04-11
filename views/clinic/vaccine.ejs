@@ -48,44 +48,46 @@
    <section id="appointments">
       <div class="container-fluid background-light justify-content-center pt-5">
          <div class="row justify-content-around">
-             <div class="col-md-10">
-                 <div id="accordion">
-                     <div class="card">
 
-                           <% for(const vaccine of noVaccines) { %>
-                              <div class="card-header container-fluid">
-                                 <h5 class="mb-0 d-flex">
-                                     <button class="btn btn-link">
-                                       <%= vaccine.Name %>
-                                     </button>
-                                     <form class="m-0 p-0" action="/clinics/<%= clinicID %>/vaccines/<%= vaccine.ID %>/enroll" method="POST">
-                                         <button class="btn btn-success float-right">
-                                             <i class="fas fa-plus-square"></i>
-                                         </button>
-                                     </form>
-                                  </div>
-                               </div>
-                           <% } %>
-                           
-                           <% for(const vaccine of vaccines) { %>
-                              <div class="card-header container-fluid">
-                                 <h5 class="mb-0 d-flex">
-                                     <button class="btn btn-link">
-                                       <%= vaccine.Name %>
-                                     </button>
-                                     <form class="m-0 p-0" action="/clinics/<%= clinicID %>/vaccines/<%= vaccine.ID %>/remove" method="POST">
-                                         <button class="btn btn-danger float-right">
-                                             <i class="fa fa-trash"></i>
-                                         </button>
-                                     </form>
-                                  </div>
-                               </div>
-                           <% } %>
-                         </div>
-                     </div>
+            <% for(const vaccine of noVaccines) { %>
+             <div class="col-md-10">   
+               <div class="card">
+                  <div class="card-header container-fluid">
+                     <h5 class="mb-0 d-flex">
+                         <button class="btn btn-link">
+                           <%= vaccine.Name %>
+                         </button>
+                         <form class="m-0 p-0" action="/clinics/<%= clinicID %>/vaccines/<%= vaccine.ID %>/enroll" method="POST">
+                             <button class="btn btn-success float-right">
+                                 <i class="fas fa-plus-square"></i>
+                             </button>
+                         </form>
+                     </h5>
+                  </div>
+               </div>
+            </div>
+            <% } %>
 
+            <% for(const vaccine of vaccines) { %>
+               <div class="col-md-10">   
+                 <div class="card">
+                    <div class="card-header container-fluid">
+                       <h5 class="mb-0 d-flex">
+                           <button class="btn btn-link">
+                             <%= vaccine.Name %>
+                           </button>
+                           <form class="m-0 p-0" action="/clinics/<%= clinicID %>/vaccines/<%= vaccine.ID %>/remove" method="POST">
+                              <button class="btn btn-danger float-right">
+                                  <i class="fa fa-trash"></i>
+                              </button>
+                          </form>
+                       </h5>
+                    </div>
                  </div>
-             </div>
+              </div>
+              <% } %>
+
+
          </div>
      </div>
    </section>
