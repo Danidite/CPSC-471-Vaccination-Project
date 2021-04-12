@@ -65,7 +65,33 @@ router.get("/:id", (req, res) => {
                     req.flash("error", error.message);            
                     return res.redirect('/clinics');
                 }
-                return res.render("clinic/show", {clinic: foundClinic, phones: results});
+
+                let phones = results;
+
+                connection.query('SELECT v.ID, v.Name FROM VACCINE v JOIN VACCINE_SUPPORT s ON v.ID = s.VID WHERE s.CID = ?', [req.params.id], function (error, results, fields) {
+                    if (error) {
+                        console.log("Get assigned Vaccines: " + error.message);
+                        req.flash("error", error.message);            
+                        return res.redirect('/clinics');
+                    }
+        
+                    // let vaccinesNotAssigned = vacines.filter(n => !results.includes(n));
+                    // // console.log(vacines.filter(n => !results.includes(n)));
+                    // console.log("All supported vaccines: ");
+                    // for(const vaccine of results) {
+                    //     console.log(vaccine);
+                    // }
+                    // console.log("All UN-supported vaccines: ");
+                    // let unsupported = vacines.filter(a => !results.map(b=>b.ID).includes(a.ID));
+                    // for(const vaccine of unsupported) {
+                    //     console.log(vaccine);
+                    // }
+                    // res.render("clinic/vaccine", {clinicID: req.params.id, vaccines: results);
+                    // return res.redirect("back");
+                    return res.render("clinic/show", {clinic: foundClinic, phones: phones, vaccines: results});
+                });
+
+                // return res.render("clinic/show", {clinic: foundClinic, phones: results});
             });
         } else {
             req.flash("error", "Clinic not found!");
@@ -142,7 +168,7 @@ router.post("/:c_id/vaccines/:v_id/enroll", middleware.isAdmin, async(req, res) 
 });
 
 // remove vaccine from clinic ROUTE
-router.post("/:c_id/vaccines/:v_id/remove", middleware.isAdmin, async(req, res) => {
+router.delete("/:c_id/vaccines/:v_id/remove", middleware.isAdmin, async(req, res) => {
     connection.query('DELETE FROM VACCINE_SUPPORT WHERE (CID = ?) AND (VID = ?)', [req.params.c_id, req.params.v_id], function (error, result, fields) {
         if (error) {
             console.log("DELETE vaccine support: " + error.message);

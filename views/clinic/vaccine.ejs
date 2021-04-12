@@ -76,7 +76,7 @@
                            <button class="btn btn-link">
                              <%= vaccine.Name %>
                            </button>
-                           <form class="m-0 p-0" action="/clinics/<%= clinicID %>/vaccines/<%= vaccine.ID %>/remove" method="POST">
+                           <form class="m-0 p-0" action="/clinics/<%= clinicID %>/vaccines/<%= vaccine.ID %>/remove/?_method=DELETE" method="POST">
                               <button class="btn btn-danger float-right">
                                   <i class="fa fa-trash"></i>
                               </button>
