@@ -83,6 +83,36 @@ router.delete("/:id", middleware.isAdmin, async(req, res) => {
     });
 });
 
+// EDIT ROUTE
+router.get("/:id/edit", middleware.isAdmin, (req, res) => {
+    connection.query('SELECT * FROM `VACCINE` WHERE `ID` = ?', [req.params.id], function (error, results, fields) {
+        if (error) {
+            console.log("Select vaccine with ID: " + error.message);
+            req.flash("error", error.message);            
+            return res.redirect('/vaccines');
+        }
+        if (results.length >= 1) {
+            let foundVaccine = results[0];
+            res.render("vaccine/edit", {vaccine: foundVaccine});
+        } else {
+            req.flash("error", "Vaccine not found!");
+            return res.redirect("back");
+        }
+    });
+});
+
+// UPDATE ROUTE
+router.put("/:id", middleware.isAdmin, (req, res) => {
+    connection.query('UPDATE VACCINE SET Name = ?, Advisery = ?, Description = ?, URL = ? WHERE ID = ?', [req.body.vaccinename, req.body.advisory, req.body.description, req.body.image, req.params.id], function (error, results, fields) {
+        if (error) {
+            console.log("Update vaccine with new information: " + error.message);
+            req.flash("error", error.message);            
+            return res.redirect("/vaccines");
+        }
+        return res.redirect("/vaccines");
+    });
+});
+
 
 // Request appointment 
 router.post("/:v_id/request", middleware.isLoggedIn, middleware.isUser, (req, res) => {

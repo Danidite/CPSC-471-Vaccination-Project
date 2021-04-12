@@ -53,23 +53,23 @@
       <div class="container mt-4">
          <div class="row justify-content-center">
              <div class="col border p-2 col-11 col-sm-10 col-md-9 col-lg-7">
-                 <h1 class="mb-4 text-center">Add new Vaccine to Database</h1>
-                 <form action="/vaccines" method="POST" class="mb-2">
+                 <h1 class="mb-4 text-center">Edit vaccine of ID: <%=vaccine.ID%></h1>
+                 <form action="/vaccines/<%=vaccine.ID%>?_method=PUT" method="POST" class="mb-2">
                      <div class="form-group">
                          <label><span class="text-danger">*</span> Vaccine Name</label>
-                         <input class="form-control" type="text" name="vaccinename" placeholder="Davidson" required>
+                         <input class="form-control" type="text" name="vaccinename" placeholder="Davidson" value="<%= vaccine.Name %>" required>
                      </div>
                      <div class="form-group">
                         <label><span class="text-danger">*</span> Advisory</label>
-                        <input class="form-control" type="text" name="advisory" placeholder="2 doses, 1 after another" required>
+                        <input class="form-control" type="text" name="advisory" placeholder="2 doses, 1 after another" value="<%= vaccine.Advisery %>" required>
                     </div>
                     <div class="form-group">
                      <label><span class="text-danger"></span> Image URL</label>
-                     <input class="form-control" type="text" name="image" placeholder="https://g.foolcdn.com/editorial/images/618803/coronavirus-vaccine-bottles.jpg">
+                     <input class="form-control" type="text" name="image" placeholder="https://g.foolcdn.com/editorial/images/618803/coronavirus-vaccine-bottles.jpg" value="<%= vaccine.URL %>">
                  </div>
                      <div class="form-group">
                         <label>Description <span class="text-danger">(Maximum of 255 characters)</span></label>
-                        <textarea class="form-control" rows="5" name="description" placeholder="Vaccine for [insert disease name here], ..." maxlength="255"></textarea>
+                        <textarea class="form-control" rows="5" name="description" placeholder="Vaccine for [insert disease name here], ..." maxlength="255"><%= vaccine.Description %></textarea>
                     </div>
 
                      <button type="submit" class="btn btn-primary" id="orange-btn">Submit</button>
