@@ -74,20 +74,6 @@ router.get("/:id", (req, res) => {
                         req.flash("error", error.message);            
                         return res.redirect('/clinics');
                     }
-        
-                    // let vaccinesNotAssigned = vacines.filter(n => !results.includes(n));
-                    // // console.log(vacines.filter(n => !results.includes(n)));
-                    // console.log("All supported vaccines: ");
-                    // for(const vaccine of results) {
-                    //     console.log(vaccine);
-                    // }
-                    // console.log("All UN-supported vaccines: ");
-                    // let unsupported = vacines.filter(a => !results.map(b=>b.ID).includes(a.ID));
-                    // for(const vaccine of unsupported) {
-                    //     console.log(vaccine);
-                    // }
-                    // res.render("clinic/vaccine", {clinicID: req.params.id, vaccines: results);
-                    // return res.redirect("back");
                     return res.render("clinic/show", {clinic: foundClinic, phones: phones, vaccines: results});
                 });
 

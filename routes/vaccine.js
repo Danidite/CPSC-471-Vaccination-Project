@@ -56,7 +56,15 @@ router.get("/:id", (req, res) => {
         }
         if (results.length >= 1) {
             let foundVaccine = results[0];
-            res.render("vaccine/show", {vaccine: foundVaccine});
+
+            connection.query('SELECT c.ID, c.Name FROM CLINIC c JOIN VACCINE_SUPPORT s ON c.ID = s.CID WHERE s.VID = ?', [req.params.id], function (error, results, fields) {
+                if (error) {
+                    console.log("Get clinics offereing this: " + error.message);
+                    req.flash("error", error.message);            
+                    return res.redirect('/vaccines');
+                }
+                return res.render("vaccine/show", {vaccine: foundVaccine, clinics: results});
+            });
         } else {
             // res.status(404).send('Email already Taken');
             req.flash("error", "Vaccine not found!");
