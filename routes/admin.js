@@ -14,7 +14,7 @@ router.get('/scores', middleware.isAdmin, (req, res) => {
             req.flash("error", error.message);            
             return res.redirect('/admin');
         }
-        console.log(result);
+        // console.log(result);
         res.render("admin/score", {users: result});
     });
 });
