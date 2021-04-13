@@ -29,7 +29,7 @@ router.post("/", middleware.isAdmin, (req, res) => {
             return res.redirect('/clinics/new');
         }
         if (results.length == 0) {
-            connection.query('INSERT INTO CLINIC SET ?', {Name: req.body.clinicname, Address: req.body.address, PostalCode: req.body.postal, Country: req.body.country, Province: req.body.province, City: req.body.city.toUpperCase(), URL: req.body.image, CreaterID: req.session.user.ID}, function (error, results, fields) {
+            connection.query('INSERT INTO CLINIC SET ?', {Name: req.body.clinicname, Address: req.body.address, PostalCode: req.body.postal, Country: req.body.country.toUpperCase(), Province: req.body.province.toUpperCase(), City: req.body.city.toUpperCase(), URL: req.body.image, CreaterID: req.session.user.ID}, function (error, results, fields) {
                 if (error) {
                     console.log("Clinic creation: " + error.message);
                     req.flash("error", error.message);            
