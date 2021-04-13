@@ -7,11 +7,19 @@ router.get('/', (req, res) => {
 });
 
 router.get("/register", (req, res) => {
+    if(req.session.user) {
+        req.flash("error", "You are already logged in!");   
+        return res.redirect('/');
+    } 
     res.render("register");
 });
 
 //Show login form
 router.get("/login", (req, res) => {
+    if(req.session.user) {
+        req.flash("error", "You are already logged in!");   
+        return res.redirect('/');
+    } 
     res.render("login");
 });
 
@@ -114,6 +122,11 @@ router.post('/login', (req, res) => {
 
 // //Handing Sign Up Logic
 router.post("/register", async (req, res) => {
+    if(req.session.user) {
+        req.flash("error", "You are already logged in!");   
+        return res.redirect('/');
+    } 
+
     connection.query('SELECT * FROM `USER` WHERE `Email` = ?', [req.body.username], function (error, results, fields) {
         if (error) {
             console.log("Select user with email: " + error.message);

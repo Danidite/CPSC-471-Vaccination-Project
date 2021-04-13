@@ -27,8 +27,8 @@ app.use(flash());
 app.set('trust proxy', 1);
 
 app.use(session({
-    secret:'LMAO Secret xddd',
-	keys: ['Rifatism','Noluna','JensusIsLife','LmaoKeyxd']
+    secret: process.env.SECERT || 'LMAO Secret xddd',
+	keys: [process.env.K1 || 'Rifatism', process.env.K2 || 'Noluna', process.env.K3 || 'JensusIsLife', process.env.K4 || 'LmaoKeyxd']
 }));
 
 // Update a value in the cookie so that the set-cookie will be sent.
