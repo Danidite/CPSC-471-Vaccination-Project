@@ -17,17 +17,6 @@ router.get('/', (req, res) => {
         res.render("vaccine/index", {vaccines: result});
     });
 });
-//Show Vaccines API
-router.get('/api', (req, res) => {
-    connection.query("SELECT * FROM VACCINE", function (error, result, fields) {
-        if (error) {
-            console.log("Get vaccine list: " + error.message);
-            return res.status(404).send(error.message);
-        }
-        // console.log(result);
-        res.status(200).send(result);
-    });
-});
 
 // NEW ROUTE
 router.get("/new", middleware.isAdmin, (req, res) => {
@@ -57,36 +46,6 @@ router.post("/", middleware.isAdmin, (req, res) => {
             req.flash("error", "Vaccine of this name already Exist!");
             return res.redirect('/vaccines/new');
         }
-    });
-});
-// Create Vaccine API
-router.post("/api/create/:id", (req, res) => {
-    connection.query('SELECT * FROM `ADMIN` WHERE `ID` = ?', [req.params.id], function (error, results, fields) {
-        if (error) {
-            //console.log("Search Admin: " + error.message);
-            return res.status(404).send(error.message);
-        }
-        if (results.length == 0) {
-            return res.status(404).send("User is not Admin!");
-        }
-        connection.query('SELECT * FROM `VACCINE` WHERE `Name` = ?', [req.body.vaccinename], function (error, results, fields) {
-            if (error) {
-                console.log("Select vaccine with name: " + error.message);
-                return res.status(404).send(error.message);
-            }
-            if (results.length == 0) {
-                connection.query('INSERT INTO VACCINE SET ?', {Name: req.body.vaccinename, Advisery: req.body.advisory, URL: req.body.image, Description: req.body.description, CreaterID: req.params.id}, function (error, results, fields) {
-                    if (error) {
-                        console.log("Vaccine creation: " + error.message);
-                        return res.status(404).send(error.message);
-                    }
-                    res.status(200).send("Vaccine Added");
-                });
-            } else {
-                // res.status(404).send('Email already Taken');
-                return res.status(404).send('Name already Taken');
-            }
-        });
     });
 });
 
@@ -134,31 +93,6 @@ router.delete("/:id", middleware.isAdmin, async(req, res) => {
         }
     });
 });
-// Remove Offered Vaccine API
-router.delete("/api/delete/:id/:userID", async(req, res) => {
-
-    connection.query('SELECT * FROM `ADMIN` WHERE `ID` = ?', [req.params.userID], function (error, results, fields) {
-        if (error) {
-            console.log("Search Admin: " + error.message);
-            return res.status(404).send(error.message);
-        }
-        if (results.length == 0) {
-            return res.status(404).send("User is not Admin!");
-        }
-
-        connection.query('DELETE FROM `VACCINE` WHERE `ID` = ?', [req.params.id], function (error, result, fields) {
-            if (error) {
-                console.log("DELETE vaccine with ID: " + error.message);
-                return res.status(404).send(error.message);
-            }
-            if (result.affectedRows >= 1) {
-                res.status(200).send("Vaccine Deleted");
-            } else {
-                return res.status(404).send(error.message);
-            }
-        });
-    });
-});
 
 // EDIT Route
 router.get("/:id/edit", middleware.isAdmin, (req, res) => {
@@ -189,28 +123,6 @@ router.put("/:id", middleware.isAdmin, (req, res) => {
         return res.redirect("/vaccines");
     });
 });
-// Edit Vaccine API
-router.put("/api/edit/:id",(req, res) => {
-    connection.query('SELECT * FROM `ADMIN` WHERE `ID` = ?', [req.params.id], function (error, results, fields) {
-        if (error) {
-            console.log("Search Admin: " + error.message);
-            return res.status(404).send(error.message);
-        }
-        if (results.length == 0) {
-            return res.status(404).send("User is not Admin!");
-        }
-
-        connection.query('UPDATE VACCINE SET Name = ?, Advisery = ?, Description = ?, URL = ? WHERE ID = ?', [req.body.vaccinename, req.body.advisory, req.body.description, req.body.image, req.body.id], function (error, results, fields) {
-            if (error) {
-                console.log("Update vaccine with new information: " + error.message);
-                return res.status(404).send(error.message);
-            }
-            res.status(200).send("Vaccine Updated");
-        });
-    });
-    
-});
-
 
 // Request appointment 
 router.post("/:v_id/request", middleware.isLoggedIn, middleware.isUser, (req, res) => {
