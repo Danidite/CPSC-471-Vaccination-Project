@@ -18,6 +18,7 @@ const adminRoutes       = require("./routes/admin"),
       clinicRoutes        = require("./routes/clinic"),
       indexRoutes       = require("./routes/index");
 
+app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(`${__dirname}/public`));
@@ -56,54 +57,13 @@ app.get('*', (req, res) => {
     res.redirect("/");
 });
 
-const vaccines = [
-    {
-        ID: 1,
-        Name: 'Moderna',
-        Advisery: 'COVID-19',
-        Description: '2 dose vaccine',
-        CreaterID: 1
-    },
-    {
-        ID: 2,
-        Name: 'Pfizer',
-        Advisery: 'COVID-19',
-        Description: '2 dose vaccine',
-        CreaterID: 1
-    }
-];
-
-const users = [
-    {
-        ID: 1,
-        Email: "test1@gmail.com",
-        Password: "1212",
-        FName: "Bob",
-        MName: "Tanner",
-        LName: "Mgee"
-    },
-    {
-        ID: 2,
-        Email: "test2@gmail.com",
-        Password: "1234",
-        FName: "Iris",
-        MName: "West",
-        LName: "Allen"
-    }
-]
-
-
-//Basic APIs below
-
-
 // Login
-app.get('/api/login/:email/:password', (req, res) => {
-    connection.query('SELECT * FROM `USER` WHERE `Email` = ?', [req.params.email], function (error, results, fields) {
-        // console.log(results);
+app.post('/api/login', (req, res) => {
+    connection.query('SELECT * FROM `USER` WHERE `Email` = ?', [req.body.username], function (error, results, fields) {
         if (results.length == 0) {
             res.status(404).send('User could not be found.');
         } else 
-        if (results[0].Password == req.params.password) {
+        if (results[0].Password == req.body.password) {
             res.status(200).send(results);
         } else {
             res.status(404).send('Password Incorrect');
@@ -111,106 +71,41 @@ app.get('/api/login/:email/:password', (req, res) => {
     });
 });
 
+// Register New User
+app.post("/api/register", async (req, res) => {
+    connection.query('SELECT * FROM `USER` WHERE `Email` = ?', [req.body.username], function (error, results, fields) {
+        if (error) {
+            console.log("Select user with email: " + error.message);
+            return res.status(404).send(error.message);
+        }
+        if (results.length == 0) {
+            connection.query('INSERT INTO USER SET ?', {Email: req.body.username, Password: req.body.password, FName: req.body.firstname, Mname: req.body.middlename, LName: req.body.lastname}, function (error, results, fields) {
+                if (error) {
+                    console.log("user creation: " + error.message);
+                    return res.status(404).send(error.message);
+                }
+        
+                let UserID = results.insertId;
+        
+                connection.query('INSERT INTO PATIENT SET ?', {ID: UserID, Age: req.body.age, PhoneNumber: req.body.phone, Address: req.body.address, PostalCode: req.body.postal, Country: req.body.country, Province: req.body.province, City: req.body.city.toUpperCase()}, function (error, results, fields) {
+                    if (error) {
+                        console.log("Patient creation: " + error.message);
+                        return res.status(404).send(error.message);
+                    }
 
-// View Vaccines
-app.get('/api/vaccines', (req, res) => {
-    res.status(200).send(vaccines);
-});
-
-
-
-// Select Vaccine
-app.get('/api/vaccines/:name', (req, res) => {
-    const vaccine = vaccines.find(v => v.Name === req.params.name);
-    if (!vaccine) {
-        res.status(404).send('Vaccine could not be found.');
-        return;
-    }
-    res.status(200).send(vaccine);
-});
-
-// Add Vaccine
-app.post('/api/vaccines', (req, res) => {
-    const { error } = validateVaccine(req.body);
-    if(error) {
-        // 400 Bad Request
-        res.status(400).send(error);
-        return;
-    }
-
-    const vaccine = {
-        ID: vaccines.length + 1,
-        Name: req.body.name,
-        Advisery: req.body.advisery,
-        Description: req.body.description,
-        CreaterID: req.body.createrID
-    };
-    vaccines.push(vaccine);
-    res.send(vaccine);
-});
-
-// Edit Customer
-app.put('/api/customers/:id', (req, res) => {
-    const user = users.find(u => u.ID === parseInt(req.params.id));
-    if (!user)  {
-        res.status(404).send('Customer could not be found.');
-        return;
-    }
-
-    const { error} = validateCustomer(req.body);
-    if(error) {
-        // 400 Bad Request
-        res.status(400).send(error);
-        return;
-    }
-
-    // Edit The Customer
-    user.Email = req.body.email;
-    user.Password = req.body.password;
-    user.FName = req.body.fName;
-    user.MName = req.body.mName;
-    user.LName = req.body.lName;
-    res.send(user);
-});
-
-
-// Validation functions
-function validateVaccine(vaccine) {
-    const schema = Joi.object ({
-        name: Joi.string().required(),
-        advisery: Joi.string().required(),
-        description: Joi.string().required(),
-        createrID: Joi.number().required()
+                    connection.query('INSERT INTO HEALTH_PROFILE SET ?', {ID: UserID, HealthNumber: req.body.healthcard}, function (error, results, fields) {
+                        if (error) {
+                            console.log("Health Card creation: " + error.message);
+                            return res.status(404).send(error.message);
+                        }
+                        res.status(200).send(results); // successful register
+                    });
+                });
+            });
+        } else {
+            return res.status(404).send('Email already Taken!');
+        }
     });
-
-    return schema.validate(vaccine);
-}
-
-function validateCustomer(user) {
-    const schema = Joi.object ({
-        email: Joi.string().required(),
-        password: Joi.string().required(),
-        fName: Joi.string().required(),
-        mName: Joi.string().required(),
-        lName: Joi.string().required()
-    });
-
-    return schema.validate(user);
-}
-
-// Remove Offered Vaccine
-app.delete('/api/vaccines/:id', (req, res) => {
-    const vaccine = vaccines.find(v => v.ID === parseInt(req.params.id));
-    if (!vaccine) {
-        res.status(404).send('Vaccine could not be found.');
-        return;
-    }
-
-    // Delete
-    const index = vaccines.indexOf(vaccine);
-    vaccines.splice(index, 1);
-
-    res.send(vaccine);
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
