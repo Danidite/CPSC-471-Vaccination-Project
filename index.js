@@ -18,6 +18,9 @@ const adminRoutes       = require("./routes/admin"),
       clinicRoutes        = require("./routes/clinic"),
       indexRoutes       = require("./routes/index");
 
+//API ROUTES
+const apiRoutes       = require("./routes/api");
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -51,6 +54,7 @@ app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/vaccines", vaccineRoutes);
 app.use("/clinics", clinicRoutes);
+app.use("/api", apiRoutes);
 
 app.get('*', (req, res) => {
     req.flash("error", "Page not found");   
