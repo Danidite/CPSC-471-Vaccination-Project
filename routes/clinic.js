@@ -4,6 +4,7 @@ const   connection      = require("../database"),
         middleware      = require("../middleware");
 
 router.get('/', (req, res) => {
+
     connection.query("SELECT * FROM CLINIC", function (error, result, fields) {
         if (error) {
             console.log("Get clinics list: " + error.message);
@@ -120,24 +121,9 @@ router.get("/:id/vaccines", middleware.isAdmin, (req, res) => {
                 req.flash("error", error.message);            
                 return res.redirect('/clinics');
             }
-
-            // let vaccinesNotAssigned = vacines.filter(n => !results.includes(n));
-            // // console.log(vacines.filter(n => !results.includes(n)));
-            // console.log("All supported vaccines: ");
-            // for(const vaccine of results) {
-            //     console.log(vaccine);
-            // }
-            // console.log("All UN-supported vaccines: ");
-            // let unsupported = vacines.filter(a => !results.map(b=>b.ID).includes(a.ID));
-            // for(const vaccine of unsupported) {
-            //     console.log(vaccine);
-            // }
             res.render("clinic/vaccine", {clinicID: req.params.id, vaccines: results, noVaccines: vacines.filter(a => !results.map(b=>b.ID).includes(a.ID))});
-            // return res.redirect("back");
         });
     });
-
-    // /clinics/<%= clinic._id%>/vaccine
 });
 
 // ENROLL ROUTE

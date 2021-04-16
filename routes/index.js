@@ -26,6 +26,10 @@ router.get("/login", (req, res) => {
 // Login (in website)
 router.post('/login', (req, res) => {
     // console.log(req.body.username + " " + req.body.password);
+
+
+
+
     connection.query('SELECT * FROM `USER` WHERE `Email` = ?', [req.body.username], function (error, results, fields) {
         if (error) {
             console.log("Search User: " + error.message);
@@ -63,8 +67,6 @@ router.post('/login', (req, res) => {
 
                         if (results.length == 0) {  
                             console.log("This user is neither a admin or patient!!!!!");
-                            // req.flash("error", "This user is neither a admin or patient!!!!!");  
-                            // return res.status(404).send('ERROR!!!! This user is neither a admin or patient!!!!!');
 
                             req.flash("error", "ERROR!!!! This user is neither a admin or patient!!!!!");            
                             return res.redirect('/login');
@@ -76,7 +78,6 @@ router.post('/login', (req, res) => {
                             req.session.user.Country = patientInfo.Country;
                             req.session.user.Province = patientInfo.Province;
                             req.session.user.City = patientInfo.City;
-                            // console.log(req.session.user);
                             connection.query('SELECT * FROM `HEALTH_PROFILE` WHERE `ID` = ?', [req.session.user.ID], function (error, results, fields) {
                                 if (error) {
                                     console.log("Search Heath Profile: " + error.message);
@@ -85,35 +86,26 @@ router.post('/login', (req, res) => {
                                 }
                                 if (results.length == 0) {  
                                     console.log("This patient do NOT HAVE A healthcard!!!!!");
-                                    // req.flash("error", "This patient do NOT HAVE A healthcard!!!!!");  
-                                    // return res.status(404).send('ERROR!!!! This patient do NOT HAVE A healthcard!!!!!');
                                     req.flash("error", "This patient do NOT HAVE A healthcard!!!!!");            
                                     req.session.user = undefined;
                                     return res.redirect('/login');
                                 } else {
                                     let healthInfo = results[0];
                                     req.session.user.HealthNumber = healthInfo.HealthNumber;
-                                    // console.log(req.session.user);
                                     req.flash("success", "Welcome patient user!");
-                                    // return res.redirect("back");
                                     res.redirect("/");
                                 }   
                             });
                         }
                     });
-                    // return res.status(404).send('NOT ADMIN.');
                 } else {
-                    // console.log("User: "+ req.session.user.email + ", is ADMIN!");
                     req.session.user.Admin = true;
 
                     req.flash("success", "Welcome admin user!");
-                    // console.log(req.session.user);
-                    // return res.redirect("back");
                     res.redirect("/");
                 }
             });
         } else {
-            // res.status(404).send('Password Incorrect');
             req.flash("error", "Password Incorrect!");
             res.redirect("/login");
         }
