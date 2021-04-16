@@ -112,8 +112,8 @@ router.get('/vaccines', (req, res) => {
     });
 });
 
-// Create Vaccine
-router.post("/vaccines/create/:id", (req, res) => {
+// Add Vaccine
+router.post("/vaccines/:id", (req, res) => {
     connection.query('SELECT * FROM `ADMIN` WHERE `ID` = ?', [req.params.id], function (error, results, fields) {
         if (error) {
             //console.log("Search Admin: " + error.message);
@@ -267,6 +267,49 @@ router.post("/appointments/request/:v_id/:userID", (req, res) => {
                     res.status(200).send("Appointment created!");
                 });
             });
+        });
+    });
+});
+
+// View Clinics
+router.get('/clinics', (req, res) => {
+    connection.query("SELECT * FROM CLINIC", function (error, result, fields) {
+        if (error) {
+            console.log("Get clinics list: " + error.message);
+            return res.status(404).send(error.message);
+        }
+        // console.log(result);
+        res.status(200).send(result);
+    });
+});
+
+// Add Clinic
+router.post("/clinics/:id", (req, res) => {
+    connection.query('SELECT * FROM `ADMIN` WHERE `ID` = ?', [req.params.id], function (error, results, fields) {
+        if (error) {
+            console.log("Search Admin: " + error.message);
+            return res.status(404).send(error.message);
+        }
+        if (results.length == 0) {
+            return res.status(404).send("User is not Admin!");
+        }
+
+        connection.query('SELECT * FROM `CLINIC` WHERE `Name` = ?', [req.body.clinicname], function (error, results, fields) {
+            if (error) {
+                console.log("Select Clinic with name: " + error.message);
+                return res.status(404).send(error.message);
+            }
+            if (results.length == 0) {
+                connection.query('INSERT INTO CLINIC SET ?', {Name: req.body.clinicname, Address: req.body.address, PostalCode: req.body.postal, Country: req.body.country.toUpperCase(), Province: req.body.province.toUpperCase(), City: req.body.city.toUpperCase(), URL: req.body.URL, CreaterID: req.params.id}, function (error, results, fields) {
+                    if (error) {
+                        console.log("Clinic creation: " + error.message);
+                        return res.status(404).send(error.message);
+                    }
+                    res.status(200).send("Clinic Successfully Created!");
+                });
+            } else {
+                return res.status(404).send("Clinic of this name already Exist!");
+            }
         });
     });
 });
