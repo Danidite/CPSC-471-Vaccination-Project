@@ -28,5 +28,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 
 5. Rename the .env-example file to .env
 
+6. Run 'npm install'
+
 6. Run 'Nodemon' or 'node index.js'
 
